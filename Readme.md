@@ -1,4 +1,3 @@
-
 # DOKU Node.js SDK Documentation
 
 ## Introduction
@@ -12,15 +11,15 @@ If your looking for another language we provide
 
 
 ## Table of Contents
-1. [Getting Started](#getting-started)
-2. [Payment Flow and Virtual Account Setup](#payment-flow-and-virtual-account-setup)
-   - [DOKU-Generated Payment Code (DGPC)](#dgpc)
-   - [Merchant-Generated Payment Code (MGPC)](#mgpc)
-   - [Direct Inquiry Payment Code (DIPC)](#dipc)
+1. [Getting Started](#1-getting-started])
+2. [Usage](#2-usage)
+   - [Virtual Account (DGPC)](#a-virtual-account-dgpc)
+   - [Virtual Account (MGPC)](#)
+   - [Virtual Account  (DIPC)](#dipc)
 3. [Handling Notifications and Validations](#handling-notifications-and-validations)
 4. [Error Handling and Troubleshooting](#error-handling-and-troubleshooting)
 5. [Additional Features](#additional-features)
-6. [Appendix](#appendix)
+6. [Appendix](#6-appendix)
 
 ## 1. Getting Started
 
@@ -34,7 +33,11 @@ npm install doku
 ```
 
 ### Configuration
-To use the SDK, you need a **Client ID**, **Secret Key**, and **Private Key** from your DOKU account. Here’s how to configure it:
+To use the SDK, you need a **Client ID**, **Secret Key**, and **Private Key**. Here's How
+
+1. **Client ID** and **Secret Key**: Retrieve these from the Integration menu in your [Doku Dashboard](#)
+2. **Private Key**: Generate your Private Key following [Doku Guide](#)
+
 
 ```javascript
 const doku = require('doku');
@@ -47,20 +50,26 @@ const snap = new doku.Snap({
 });
 ```
 
-## 2. Payment Flow and Virtual Account Setup
+## 2. Usage
 
 The DOKU Node.js SDK offers three types of virtual accounts:
 
-### a. DOKU-Generated Payment Code (DGPC)
+### a. Virtual Account (DGPC)
 - **Description:** A pre-generated virtual account provided by DOKU.
 - **Use Case:** Recommended for one-time transactions.
 
-#### Usage
 1. **Create Virtual Account**
    - **Function:** `createVa`
    - **Parameters:** `createVaRequestDto`
 
+| **Field**           | **Description**                                                | **Required** |
+|---------------------|----------------------------------------------------------------|--------------|
+| `partnerServiceId`   | The unique identifier for the partner service.                 | Yes          |
+| `customerNo`         | The customer's identification number.                          | Yes          |
+| `virtualAccountNo`   | The virtual account number associated with the customer.       | Yes          |
+
    ```javascript
+   
    const createVaRequestDto = new doku.CreateVARequestDto({
      partnerServiceId: '999999',
      customerNo: '0000000',
@@ -80,13 +89,17 @@ The DOKU Node.js SDK offers three types of virtual accounts:
    const response = await snap.updateVa(updateVaRequestDto);
    ```
 
-### b. Merchant-Generated Payment Code (MGPC)
+### b. Virtual Account (MGPC)
 - **Description:** Custom virtual account codes created by the merchant.
 - **Use Case:** Useful when merchants require custom payment identifiers.
 
-### c. Direct Inquiry Payment Code (DIPC)
+### c. Virtual Account (DIPC)
 - **Description:** Merchants validate payments directly without contacting DOKU.
 - **Use Case:** Useful for high-security transactions.
+
+### d. Direct Debit
+- **Description:** Direct Debit
+- **Use Case:** Direct Debit
 
 ## 3. Handling Notifications and Validations
 
@@ -110,11 +123,11 @@ After a customer completes payment, you’ll receive a notification. Here’s ho
 
 This section provides common errors and solutions:
 
-| Error Code | Description                            | Solution                                     |
-|------------|----------------------------------------|----------------------------------------------|
-| `4010000`  | Unauthorized                           | Check if Client ID and Secret Key are valid. |
-| `4012400`  | Virtual Account Not Found              | Verify the virtual account number provided.  |
-| `2002400`  | Successful                             | Transaction completed successfully.          |
+| Error Code | Description                           | Solution                                     |
+|------------|---------------------------------------|----------------------------------------------|
+| `4010000`  | Unauthorized                          | Check if Client ID and Secret Key are valid. |
+| `4012400`  | Virtual Account Not Found             | Verify the virtual account number provided.  |
+| `2002400`  | Successful                            | Transaction completed successfully.          |
 
 ## 5. Additional Features
 
