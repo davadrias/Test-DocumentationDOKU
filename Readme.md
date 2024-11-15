@@ -50,7 +50,7 @@ const snap = new doku.Snap({
 
 **Initialization**
 
-Always start by initializing the Snap object:
+Always start by initializing the Snap object.
 
 ```javascript
 const snap = new doku.Snap({})
