@@ -3,12 +3,7 @@
 ## Introduction
 Welcome to the DOKU Node.js SDK! This SDK simplifies access to the DOKU API for your server-side JavaScript applications, enabling seamless integration with payment and virtual account services.
 
-If your looking for another language we provide
-- [PHP](#)
-- [Go](#)
-- [Python](#)
-- [Java](#)
-
+If your looking for another language, we got: [PHP](#), [Go](#), [Python](#), [Java](#)
 
 ## Table of Contents
 1. [Getting Started](#1-getting-started])
