@@ -77,17 +77,23 @@ The DOKU Node.js SDK offers three types of virtual accounts:
      // additional parameters
    });
 
-   const response = await snap.createVa(createVaRequestDto);a
+   const response = await snap.createVa(createVaRequestDto);
    console.log("Payment code:", response.paymentCode);
    ```
 
 2. **Update Virtual Account**
    - **Function:** `updateVa`
+   - **Parameters** `updateVaRequestDto`
 
-   ```javascript
-   const updateVaRequestDto = /* request setup */;
-   const response = await snap.updateVa(updateVaRequestDto);
-   ```
+| **Field**           | **Description**                                                | **Required** |
+|---------------------|----------------------------------------------------------------|--------------|
+| `partnerServiceId`   | The unique identifier for the partner service.                | Yes          |
+| `customerNo`         | The customer's identification number.                         | Yes          |
+
+```javascript
+const updateVaRequestDto = /* request setup */;
+const response = await snap.updateVa(updateVaRequestDto);
+```
 
 ### b. Virtual Account (MGPC)
 - **Description:** Custom virtual account codes created by the merchant.
