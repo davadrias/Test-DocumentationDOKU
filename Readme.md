@@ -28,7 +28,7 @@ npm install doku
 ```
 
 ### Configuration
-To use the SDK you need to initilize it first, you need a **Client ID**, **Secret Key**, and **Private Key**. Here's How
+Before using the Doku Snap SDK, you need to initialize it with your credentials:
 
 1. **Client ID** and **Secret Key**: Retrieve these from the Integration menu in your [Doku Dashboard](#)
 2. **Private Key**: Generate your Private Key following [Doku Guide](#)
@@ -37,19 +37,24 @@ To use the SDK you need to initilize it first, you need a **Client ID**, **Secre
 ```javascript
 const doku = require('doku');
 
-function initializeSnap() {
-  const snap = new doku.Snap({
-    isProduction: false,
-    clientId: 'your_client_id_here'
-    secretKey: 'your_secret_key_here'
-    privateKey: 'your_private_key_here',
-  });
-}
+const snap = new doku.Snap({
+   isProduction: false,
+   clientId: 'your_client_id_here'
+   secretKey: 'your_secret_key_here'
+   privateKey: 'your_private_key_here',
+});
+
 ```
 
 ## 2. Usage
 
-The DOKU Node.js SDK offers three types of virtual accounts:
+**Initialization**
+
+Always start by initializing the Snap object:
+
+```javascript
+const snap = new doku.Snap({})
+```
 
 ### a. Virtual Account (DGPC)
 - **Description:** A pre-generated virtual account provided by DOKU.
@@ -67,7 +72,6 @@ The DOKU Node.js SDK offers three types of virtual accounts:
 
    ```javascript
    // Required or import goes here
-   //Dont forget to initalize doku.snap
 
    const createVaRequestDto = new doku.CreateVARequestDto({
      partnerServiceId: '999999',
