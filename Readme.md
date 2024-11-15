@@ -112,17 +112,17 @@ const response = await snap.updateVa(updateVaRequestDto);
 After a customer completes payment, you’ll receive a notification. Here’s how to process notifications and validate them:
 
 1. **Generate Token for Notification**
-   - **Function:** `generateToken`
+   - **Function:** `validateSignatureAndGenerateToken`
 
-   ```javascript
-   const tokenResponse = snap.validateSignatureAndGenerateToken(request, endPointUrl);
-   ```
+```javascript
+const tokenResponse = snap.validateSignatureAndGenerateToken(request, endPointUrl);
+```
 
 2. **Handle Notification Response**
    - **Function:** `generateNotificationResponse`
 
-   ```javascript
-   const notificationResponse = snap.generateNotificationResponse(isTokenValid, requestBody);
+```javascript
+const notificationResponse = snap.generateNotificationResponse(isTokenValid, requestBody);
    ```
 
 ## 4. Error Handling and Troubleshooting
