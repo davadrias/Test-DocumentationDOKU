@@ -71,7 +71,7 @@ Always start by initializing the Snap object.
 ```php
 $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $secretKey, $authCode);
 ```
- ### Virtual Account
+### Virtual Account
 #### I. Virtual Account (DGPC & MGPC)
 ##### DGPC
 - **Description:** A pre-generated virtual account provided by DOKU.
@@ -206,31 +206,31 @@ Parameters for **createVA** and **updateVA**
 1. **Create Virtual Account**
     - **Function:** `createVa`
     - **Parameters:** `createVaRequestDto`
-    ```php
-      use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
-      use Doku\Snap\Models\TotalAmount\TotalAmount;
-      use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
-      use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
+  ```php
+    use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
+    use Doku\Snap\Models\TotalAmount\TotalAmount;
+    use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
+    use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
 
-      $createVaRequestDto = new CreateVaRequestDto(
-        "8129014",  // partner
-        "17223992157",  // customerno
-        "812901417223992157",  // customerNo
-        "T_" . time(),  // virtualAccountName
-        "test.example." . time() . "@test.com",  // virtualAccountEmail
-        "621722399214895",  // virtualAccountPhone
-        "INV_CIMB_" . time(),  // trxId
-        new TotalAmount("12500.00", "IDR"),  // totalAmount
-        new CreateVaRequestAdditionalInfo(
-              "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
-              ), // additionalInfo
-        'C',  // virtualAccountTrxType
-        "2024-08-31T09:54:04+07:00"  // expiredDate
-      );
+    $createVaRequestDto = new CreateVaRequestDto(
+      "8129014",  // partner
+      "17223992157",  // customerno
+      "812901417223992157",  // customerNo
+      "T_" . time(),  // virtualAccountName
+      "test.example." . time() . "@test.com",  // virtualAccountEmail
+      "621722399214895",  // virtualAccountPhone
+      "INV_CIMB_" . time(),  // trxId
+      new TotalAmount("12500.00", "IDR"),  // totalAmount
+      new CreateVaRequestAdditionalInfo(
+            "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
+            ), // additionalInfo
+      'C',  // virtualAccountTrxType
+      "2024-08-31T09:54:04+07:00"  // expiredDate
+    );
 
-      $result = $snap->createVa($createVaRequestDto);
-      echo json_encode($result, JSON_PRETTY_PRINT);
-    ```
+    $result = $snap->createVa($createVaRequestDto);
+    echo json_encode($result, JSON_PRETTY_PRINT);
+  ```
 
 2. **Update Virtual Account**
     - **Function:** `updateVa`
