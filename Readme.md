@@ -8,10 +8,13 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
 ## Table of Contents
 1. [Getting Started](#1-getting-started])
 2. [Usage](#2-usage)
-   - [Virtual Account (DGPC & MGPC)](#a-virtual-account-dgpc)
-   - [Virtual Account  (DIPC)](#dipc)
-   - [Virtual Account Check Status](#c-check-virtual-account-status)
-   - [Binding / Registration](#)
+   - [Virtual Account](#virtual-account)
+      - [Virtual Account (DGPC & MGPC)](#a-virtual-account-dgpc)
+      - [Virtual Account  (DIPC)](#dipc)
+      - [Virtual Account Check Status](#c-check-virtual-account-status)
+   - [Binding / Registration](#b-binding--registration)
+   - [Direct Debit](#)
+   - [E-Wallet](#)
 3. [Handling Notifications and Validations](#handling-notifications-and-validations)
 4. [Error Handling and Troubleshooting](#error-handling-and-troubleshooting)
 5. [Additional Features](#additional-features)
@@ -63,18 +66,17 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
 ## 2. Usage
 
 **Initialization**
-
 Always start by initializing the Snap object.
 
 ```php
 $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $secretKey, $authCode);
 ```
-
-## a. Virtual Account (DGPC & MGPC)
-#### DGPC
+ ### Virtual Account
+#### I. Virtual Account (DGPC & MGPC)
+##### DGPC
 - **Description:** A pre-generated virtual account provided by DOKU.
 - **Use Case:** Recommended for one-time transactions.
-#### MGPC
+##### MGPC
 - **Description:** Merchant generated virtual account.
 - **Use Case:** Recommended for top up business model.
 
@@ -232,7 +234,7 @@ Parameters for **createVA** and **updateVA**
 
 2. **Update Virtual Account**
     - **Function:** `updateVa`
-    - **Parameters** `updateVaRequestDto`
+    - **Parameters:** `updateVaRequestDto`
 
     ```php
       use Doku\Snap\Models\VA\Request\UpdateVaRequestDto;
@@ -257,8 +259,6 @@ Parameters for **createVA** and **updateVA**
       echo json_encode($result, JSON_PRETTY_PRINT);
     ```
 
-
-
 3. **Delete Virtual Account**
 
     | **Parameter**        | **Description**                                                             | **Length**  | **Data Type**  | **Required** |
@@ -269,38 +269,119 @@ Parameters for **createVA** and **updateVA**
     | `trxId`               | Invoice number in Merchant's system.                                       | 1 - 64      | String         | ✅           |
     | `additionalInfo`      | `channel`: Channel applied for this VA.<br><small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small> | 1 - 30      | String         | ✅           |
     
-  - **Function:** `deletePaymentCode`
-  - **Parameters** `deleteVaRequestDto`
+    - **Function:** `deletePaymentCode`
+    - **Parameters** `deleteVaRequestDto`
+    ```php
+    use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
+    use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
+    use Doku\Snap\Models\VA\AdditionalInfo\DeleteVaRequestAdditionalInfo;
 
-  ```php
-  use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
-  use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
-  use Doku\Snap\Models\VA\AdditionalInfo\DeleteVaRequestAdditionalInfo;
+    $deleteVaRequestDto = new DeleteVaRequestDto(
+        "8129014",  // partnerServiceId
+        "17223992155",  // customerNo
+        "812901417223992155",  // virtualAccountNo
+        "INV_CIMB_" . time(),  // trxId
+        new DeleteVaRequestAdditionalInfo("VIRTUAL_ACCOUNT_BANK_CIMB")  // additionalInfo
+    );
 
-  $deleteVaRequestDto = new DeleteVaRequestDto(
-      "8129014",  // partnerServiceId
-      "17223992155",  // customerNo
-      "812901417223992155",  // virtualAccountNo
-      "INV_CIMB_" . time(),  // trxId
-      new DeleteVaRequestAdditionalInfo("VIRTUAL_ACCOUNT_BANK_CIMB")  // additionalInfo
-  );
-
-  $result = $snap->deletePaymentCode($deleteVaRequestDto);
-  echo json_encode($result, JSON_PRETTY_PRINT);
-  ```
-
+    $result = $snap->deletePaymentCode($deleteVaRequestDto);
+    echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
 
 
-
-### b. Virtual Account (DIPC)
+#### II. Virtual Account (DIPC)
 - **Description:** Custom virtual account codes created by the merchant.
 - **Use Case:** Useful when merchants require custom payment identifiers.
 
-### c. Check Virtual Account Status
-- **Description:** Custom virtual account codes created by the merchant.
-- **Use Case:** Useful when merchants require custom payment identifiers.
+#### III. Check Virtual Account Status
+  | **Parameter**        | **Description**                                                             | **Length**  | **Data Type**  | **Required** |
+  |-----------------------|----------------------------------------------------------------------------|-------------|----------------|--------------|
+  | `partnerServiceId`    | The unique identifier for the partner service.                             | 1 - 8       | String         | ✅           |
+  | `customerNo`          | The customer's identification number.                                      | 1 - 20      | String         | ✅           |
+  | `virtualAccountNo`    | The virtual account number associated with the customer.                   | 1 - 20      | String         | ✅           |
+
+  - **Function:** `checkStatusVa`
+  - **Parameters:** `checkStatusVaRequestDto` 
+    ```php
+    use Doku\Snap\Models\VA\Request\CheckStatusVaRequestDto;
+
+    $checkStatusVaRequestDto = new CheckStatusVaRequestDto(
+        "8129014",  // partnerServiceId
+        "17223992155",  // customerNo
+        "812901417223992155",  // virtualAccountNo
+        null,
+        null,
+        null
+    );
+
+    $result = $snap-> ($checkStatusVaRequestDto);
+    echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
+
+### B. Binding / Registration
+| **Services**     | **Binding Type**      | **Details**                        s|
+|-------------------|-----------------------|-----------------------------------|
+| Direct Debit      | Account Binding       | Supports Allo Bank and CIMB       |
+| Direct Debit      | Card Registration     | Supports BRI                      |
+| E-Wallet          | Account Binding       | Supports OVO                      |
+
+#### I. Account Binding 
+1. **Binding**
+    - **Function:** `doAccountBinding`
+    - **Parameters** `accountBindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+    ```php
+    use Doku\Snap\Models\AccountBinding\AccountBindingRequestDto;
+    use Doku\Snap\Models\AccountBinding\AccountBindingAdditionalInfoRequestDto;
+
+    $additionalInfo = new AccountBindingAdditionalInfoRequestDto(
+      "Mandiri",  // channel
+      "CUST123",  // custIdMerchant
+      "John Doe",  // customerName
+      "john.doe@example.com",  // email
+      "1234567890",  // idCard
+      "Indonesia",  // country
+      "123 Main St, Jakarta",  // address
+      "19900101",  // dateOfBirth
+      "https://success.example.com",  // successRegistrationUrl
+      "https://fail.example.com",  // failedRegistrationUrl
+      "iPhone 12",  // deviceModel
+      "iOS",  // osType
+      "CH001"  // channelId
+    );
+
+    $accountBindingRequestDto = new AccountBindingRequestDto(
+      "6281234567890",  // phoneNo
+      $additionalInfo
+    );
+
+    $result = $snap->doAccountBinding($accountBindingRequestDto, $privateKey, $clientId, $secretKey, $isProduction);
+    echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
+
+2. **Unbinding**
+    - **Function:** `doAccountUnbinding`
+    - **Parameters:** `accountUnbindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+    ```php
+    use Doku\Snap\Models\AccountUnbinding\AccountUnbindingRequestDto;
+    use Doku\Snap\Models\AccountUnbinding\AccountUnbindingAdditionalInfoRequestDto;
+
+    $additionalInfo = new AccountUnbindingAdditionalInfoRequestDto("Mandiri");
+
+    $accountUnbindingRequestDto = new AccountUnbindingRequestDto(
+        "tokenB2b2c123",  // tokenId (tokenB2b2c)
+        $additionalInfo
+    );
+
+    $result = $snap->doAccountUnbinding($accountUnbindingRequestDto, $privateKey, $clientId, $secretKey, $isProduction);
+    echo json_encode($result, JSON_PRETTY_PRINT);  
+    ```
+#### II. Card Binding
 
 
+
+### Direct Debit
+
+### E-Wallet
 
 ## 3. Handling Notifications and Validations
 
