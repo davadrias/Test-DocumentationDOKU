@@ -12,7 +12,7 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
       - [Virtual Account (DGPC & MGPC)](#a-virtual-account-dgpc)
       - [Virtual Account  (DIPC)](#dipc)
       - [Virtual Account Check Status](#c-check-virtual-account-status)
-   - [Binding / Registration](#b-binding--registration)
+   - [Binding / Registration Operatios](#b-binding--registration)
    - [Direct Debit](#)
    - [E-Wallet](#)
 3. [Handling Notifications and Validations](#handling-notifications-and-validations)
@@ -24,7 +24,8 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
 ## 1. Getting Started
 
 ### Requirements
-- Node.js v18 or higher
+-PHP version 7.4 or higher
+-Composer installed
 
 ### Installation
 To install the Doku Snap SDK, use Composer:
@@ -86,7 +87,6 @@ Parameters for **createVA** and **updateVA**
     <tr>
       <th><strong>Parameter</strong></th>
       <th colspan="2"><strong>Description</strong></th>
-      <th><strong>Length</strong></th>
       <th><strong>Data Type</strong></th>
       <th><strong>Required</strong></th>
     </tr>
@@ -95,142 +95,122 @@ Parameters for **createVA** and **updateVA**
     <tr>
       <td><code>partnerServiceId</code></td>
       <td colspan="2">The unique identifier for the partner service.</td>
-      <td>1 - 20</td>
-      <td>String</td>
+      <td>String max(1-20)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td><code>customerNo</code></td>
       <td colspan="2">The customer's identification number.</td>
-      <td>1 - 20</td>
-      <td>String</td>
+      <td>String (1-20)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td><code>virtualAccountNo</code></td>
       <td colspan="2">The virtual account number associated with the customer.</td>
-      <td>1 - 20</td>
-      <td>String</td>
+      <td>String (1-20)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td><code>virtualAccountName</code></td>
       <td colspan="2">The name of the virtual account associated with the customer.</td>
-      <td>1 - 255</td>
-      <td>String</td>
+      <td>String (1-255)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td><code>virtualAccountEmail</code></td>
       <td colspan="2">The email address associated with the virtual account.</td>
-      <td>1 - 255</td>
-      <td>String</td>
+      <td>String (1-255)</td>
       <td>❌</td>
     </tr>
     <tr>
       <td><code>virtualAccountPhone</code></td>
       <td colspan="2">The phone number associated with the virtual account.</td>
-      <td>9 - 30</td>
-      <td>String</td>
+      <td>String (9-30)</td>
       <td>❌</td>
     </tr>
     <tr>
       <td><code>trxId</code></td>
       <td colspan="2">Invoice number in Merchants system.</td>
-      <td>1 - 64</td>
-      <td>String</td>
+      <td>String (1-64)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td rowspan="2"><code>totalAmount</code></td>
-      <td colspan="2" ><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
-      <td>1 - 16.2</td>
-      <td>String</td>
+      <td colspan="2"><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td>String (1-16.2)</td>
       <td>✅</td>
     </tr>
     <tr>
-      <td colspan="2" ><code>Currency</code>: Currency <br> <small> Example: "IDR"</small> </td>
-      <td>1 - 3</td>
-      <td>String</td>
+      <td colspan="2"><code>Currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String (1-3)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td rowspan="4"><code>additionalInfo</code></td>
-      <td colspan ="2" ><code>channel</code>: Channel that will be applied for this VA <br> <small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small></td>
-      <td>1 - 20</td>
-      <td>String</td>
+      <td colspan="2"><code>channel</code>: Channel that will be applied for this VA <br> <small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small></td>
+      <td>String (1-20)</td>
       <td>✅</td>
     </tr>
     <tr>
-     <td rowspan="3"><code>virtualAccountConfig</code></td>
-    <td><code>reusableStatus</code>: Reusable Status For Virtual Account Transaction
-      <br><small>value TRUE or FALSE</small></td>
-      <td>-</td>
+      <td rowspan="3"><code>virtualAccountConfig</code></td>
+      <td><code>reusableStatus</code>: Reusable Status For Virtual Account Transaction <br><small>value TRUE or FALSE</small></td>
       <td>Boolean</td>
       <td>❌</td>
     </tr>
     <tr>
-      <td><code>minAmount</code>: Minimum Amount can be use only if virtualAccountTrxType is Open Amount (O). With 2 decimal,format.
-      <br><small>Example: "10000.00"</small></td>
-      <td>1 - 16.2 </td>
-      <td>String</td>
+      <td><code>minAmount</code>: Minimum Amount can be used only if <code>virtualAccountTrxType</code> is Open Amount (O). <br><small>Example: "10000.00"</small></td>
+      <td>String (1-16.2)</td>
       <td>❌</td>
     </tr>
     <tr>
-      <td><code>maxAmount</code>: Maximum Amount can be use only if virtualAccountTrxType is Open Amount (O). With 2 decimal,format. 
-      <br><small>Example: "5000000.00"</small>
-      </td>
-      <td>1-16.2</td>
-      <td>String</td>
+      <td><code>maxAmount</code>: Maximum Amount can be used only if <code>virtualAccountTrxType</code> is Open Amount (O). <br><small>Example: "5000000.00"</small></td>
+      <td>String (1-16.2)</td>
       <td>❌</td>
     </tr>
     <tr>
-      <td ><code>virtualAccountTrxType</code></td>
+      <td><code>virtualAccountTrxType</code></td>
       <td colspan="2">Transaction type for this transaction. C (Closed Amount), O (Open Amount)</td>
-      <td>1</td>
-      <td>String</td>
+      <td>String (1)</td>
       <td>✅</td>
     </tr>
     <tr>
       <td><code>expiredDate</code></td>
-      <td colspan="2">Expiration date for Virtual Account. ISO-8601
-        <br><small>Example: "2023-01-01T10:55:00+07:00"</small>
-      </td>
-      <td>-</td>
+      <td colspan="2">Expiration date for Virtual Account. ISO-8601 <br><small>Example: "2023-01-01T10:55:00+07:00"</small></td>
       <td>String</td>
       <td>❌</td>
     </tr>
   </tbody>
 </table>
 
+
 1. **Create Virtual Account**
     - **Function:** `createVa`
     - **Parameters:** `createVaRequestDto`
-  ```php
-    use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
-    use Doku\Snap\Models\TotalAmount\TotalAmount;
-    use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
-    use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
+    ```php
+      use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
+      use Doku\Snap\Models\TotalAmount\TotalAmount;
+      use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
+      use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
 
-    $createVaRequestDto = new CreateVaRequestDto(
-      "8129014",  // partner
-      "17223992157",  // customerno
-      "812901417223992157",  // customerNo
-      "T_" . time(),  // virtualAccountName
-      "test.example." . time() . "@test.com",  // virtualAccountEmail
-      "621722399214895",  // virtualAccountPhone
-      "INV_CIMB_" . time(),  // trxId
-      new TotalAmount("12500.00", "IDR"),  // totalAmount
-      new CreateVaRequestAdditionalInfo(
-            "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
-            ), // additionalInfo
-      'C',  // virtualAccountTrxType
-      "2024-08-31T09:54:04+07:00"  // expiredDate
-    );
+      $createVaRequestDto = new CreateVaRequestDto(
+        "8129014",  // partner
+        "17223992157",  // customerno
+        "812901417223992157",  // customerNo
+        "T_" . time(),  // virtualAccountName
+        "test.example." . time() . "@test.com",  // virtualAccountEmail
+        "621722399214895",  // virtualAccountPhone
+        "INV_CIMB_" . time(),  // trxId
+        new TotalAmount("12500.00", "IDR"),  // totalAmount
+        new CreateVaRequestAdditionalInfo(
+              "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
+              ), // additionalInfo
+        'C',  // virtualAccountTrxType
+        "2024-08-31T09:54:04+07:00"  // expiredDate
+      );
 
-    $result = $snap->createVa($createVaRequestDto);
-    echo json_encode($result, JSON_PRETTY_PRINT);
-  ```
+      $result = $snap->createVa($createVaRequestDto);
+      echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
 
 2. **Update Virtual Account**
     - **Function:** `updateVa`
@@ -261,13 +241,14 @@ Parameters for **createVA** and **updateVA**
 
 3. **Delete Virtual Account**
 
-    | **Parameter**        | **Description**                                                             | **Length**  | **Data Type**  | **Required** |
-    |-----------------------|----------------------------------------------------------------------------|-------------|----------------|--------------|
-    | `partnerServiceId`    | The unique identifier for the partner service.                             | 1 - 8       | String         | ✅           |
-    | `customerNo`          | The customer's identification number.                                      | 1 - 20      | String         | ✅           |
-    | `virtualAccountNo`    | The virtual account number associated with the customer.                   | 1 - 20      | String         | ✅           |
-    | `trxId`               | Invoice number in Merchant's system.                                       | 1 - 64      | String         | ✅           |
-    | `additionalInfo`      | `channel`: Channel applied for this VA.<br><small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small> | 1 - 30      | String         | ✅           |
+| **Parameter**        | **Description**                                                             | **Data Type**       | **Required** |
+|-----------------------|----------------------------------------------------------------------------|---------------------|--------------|
+| `partnerServiceId`    | The unique identifier for the partner service.                             | String (1-8)        | ✅           |
+| `customerNo`          | The customer's identification number.                                      | String (1-20)       | ✅           |
+| `virtualAccountNo`    | The virtual account number associated with the customer.                   | String (1-20)       | ✅           |
+| `trxId`               | Invoice number in Merchant's system.                                       | String (1-64)       | ✅           |
+| `additionalInfo`      | `channel`: Channel applied for this VA.<br><small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small> | String (1-30)       | ✅           |
+
     
     - **Function:** `deletePaymentCode`
     - **Parameters** `deleteVaRequestDto`
@@ -294,11 +275,14 @@ Parameters for **createVA** and **updateVA**
 - **Use Case:** Useful when merchants require custom payment identifiers.
 
 #### III. Check Virtual Account Status
-  | **Parameter**        | **Description**                                                             | **Length**  | **Data Type**  | **Required** |
-  |-----------------------|----------------------------------------------------------------------------|-------------|----------------|--------------|
-  | `partnerServiceId`    | The unique identifier for the partner service.                             | 1 - 8       | String         | ✅           |
-  | `customerNo`          | The customer's identification number.                                      | 1 - 20      | String         | ✅           |
-  | `virtualAccountNo`    | The virtual account number associated with the customer.                   | 1 - 20      | String         | ✅           |
+ | **Parameter**        | **Description**                                                             | **Data Type**       | **Required** |
+|-----------------------|----------------------------------------------------------------------------|---------------------|--------------|
+| `partnerServiceId`    | The unique identifier for the partner service.                             | String (1-8)        | ✅           |
+| `customerNo`          | The customer's identification number.                                      | String (1-20)       | ✅           |
+| `virtualAccountNo`    | The virtual account number associated with the customer.                   | String (1-20)       | ✅           |
+| `inquiryRequestId`    | The customer's identification number.                                      | String (1-128)       | ❌           |
+| `paymentRequestId`    | The virtual account number associated with the customer.                   | String (1-128)       | ❌           |
+| `additionalInfo`      | The virtual account number associated with the customer.                   | String      | ❌           |
 
   - **Function:** `checkStatusVa`
   - **Parameters:** `checkStatusVaRequestDto` 
@@ -318,7 +302,7 @@ Parameters for **createVA** and **updateVA**
     echo json_encode($result, JSON_PRETTY_PRINT);
     ```
 
-### B. Binding / Registration
+### B. Binding / Registration Operations
 | **Services**     | **Binding Type**      | **Details**                        s|
 |-------------------|-----------------------|-----------------------------------|
 | Direct Debit      | Account Binding       | Supports Allo Bank and CIMB       |
@@ -375,9 +359,64 @@ Parameters for **createVA** and **updateVA**
     $result = $snap->doAccountUnbinding($accountUnbindingRequestDto, $privateKey, $clientId, $secretKey, $isProduction);
     echo json_encode($result, JSON_PRETTY_PRINT);  
     ```
-#### II. Card Binding
 
+#### II. Card Registration
+1. **Registration**
+    - **Function:** `doCardRegistration`
+    - **Parameters** `cardRegistrationRequestDto`,`deviceId`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+    ```php
+    use Doku\Snap\Models\CardRegistration\CardRegistrationRequestDto;
+    use Doku\Snap\Models\CardRegistration\CardRegistrationAdditionalInfoRequestDto;
 
+    $additionalInfo = new CardRegistrationAdditionalInfoRequestDto(
+        'Mandiri',
+        'John Doe',
+        'john@example.com',
+        '1234567890',
+        'ID',
+        '123 Main St',
+        '19900101',
+        'http://success.url',
+        'http://failed.url'
+    );
+
+    $cardRegistrationRequestDto = new CardRegistrationRequestDto(
+        'encrypted_card_data',
+        'cust123',
+        '081234567890',
+        $additionalInfo
+    );
+
+    $deviceId = "DEVICE_ID_123";
+    $response = $snap->doCardRegistration(
+        $cardRegistrationRequestDto,
+        $deviceId,
+        $privateKey,
+        $clientId,
+        $secretKey,
+        $isProduction
+    );
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    ```
+
+2. **UnRegistration**
+    - **Function:** `doCardUnbinding`
+    - **Parameters** `cardUnbindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+    ```php
+      use Doku\Snap\Models\AccountUnbinding\AccountUnbindingRequestDto;
+      use Doku\Snap\Models\AccountUnbinding\AccountUnbindingAdditionalInfoRequestDto;
+
+      $additionalInfo = new AccountUnbindingAdditionalInfoRequestDto("Mandiri");
+
+      $cardUnbindingRequestDto = new AccountUnbindingRequestDto(
+          "tokenB2b2c123",  // tokenId (tokenB2b2c)
+          $additionalInfo
+      );
+
+      $result = $snap->doCardUnbinding($cardUnbindingRequestDto, $privateKey, $clientId, $secretKey, $isProduction);
+      echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
 
 ### Direct Debit
 
