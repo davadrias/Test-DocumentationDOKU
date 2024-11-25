@@ -153,8 +153,14 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
     </tr>
     <tr>
       <td rowspan="4"><code>additionalInfo</code></td>
-      <td rowspan="4"><code>virtualAccountConfig</code></td>
-      <td><code>reusableStatus</code>: Reusable Status For Virtual Account Transaction
+      <td colspan ="2" ><code>channel</code>: Channel that will be applied for this VA <br> <small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small></td>
+      <td>1 - 20</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+     <td rowspan="3"><code>virtualAccountConfig</code></td>
+    <td><code>reusableStatus</code>: Reusable Status For Virtual Account Transaction
       <br><small>value TRUE or FALSE</small></td>
       <td>-</td>
       <td>Boolean</td>
@@ -172,14 +178,8 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
       <br><small>Example: "5000000.00"</small>
       </td>
       <td>1-16.2</td>
-      <td>Decimal</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td><code>channel</code>: Channel that will be applied for this VA <br> <small>VIRTUAL_ACCOUNT_BANK_CIMB</small></td>
-      <td>1 - 20</td>
       <td>String</td>
-      <td>✅</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td ><code>virtualAccountTrxType</code></td>
@@ -199,8 +199,6 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
     </tr>
   </tbody>
 </table>
-
-
 
    ```php
    use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
