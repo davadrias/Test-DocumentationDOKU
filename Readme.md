@@ -10,7 +10,7 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
 2. [Usage](#2-usage)
    - [Virtual Account (DGPC & MGPC)](#a-virtual-account-dgpc)
    - [Virtual Account  (DIPC)](#dipc)
-   - [Check Virtual Account Status](#c-check-virtual-account-status)
+   - [Virtual Account Check Status](#c-check-virtual-account-status)
    - [Binding / Registration](#)
 3. [Handling Notifications and Validations](#handling-notifications-and-validations)
 4. [Error Handling and Troubleshooting](#error-handling-and-troubleshooting)
@@ -35,7 +35,7 @@ Before using the Doku Snap SDK, you need to initialize it with your credentials:
 1. **Client ID** and **Secret Key**: Retrieve these from the Integration menu in your [Doku Dashboard](#)
 2. **Private Key**: Generate your Private Key following [Doku Guide](#)
 
-| **Field**       | **Description**                                    | **Required** |
+| **Parameter**       | **Description**                                    | **Required** |
 |-----------------|----------------------------------------------------|--------------|
 | `privateKey`    | The private key for the partner service.           | ✅          |
 | `publicKey`     | The public key for the partner service.            | ✅           |
@@ -78,19 +78,128 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
    - **Function:** `createVa`
    - **Parameters:** `createVaRequestDto`
 
-| **Field**                | **Description**                                                | **Required** |
-|--------------------------|----------------------------------------------------------------|--------------|
-| `partnerServiceId`        | The unique identifier for the partner service.                 | ✅           |
-| `customerNo`              | The customer's identification number.                          | ✅           |
-| `virtualAccountNo`        | The virtual account number associated with the customer.       | ✅           |
-| `virtualAccountName`      | The name of the virtual account associated with the customer.  | ✅           |
-| `virtualAccountEmail`     | The email address associated with the virtual account.         | ❌           |
-| `virtualAccountPhone`     | The phone number associated with the virtual account.         | ❌           |
-| `trxId`                   | The unique transaction identifier.                             | ✅           |
-| `totalAmount`             |  `Value` <br/>  `Currency`                                                      | ✅ <br/> ✅  |
-| `additionalInfo`          | 3 <br/> 4 <br/> 5                                              | 3 <br/> 4 <br/> 5 |
-| `virtualAccountTrxType`   | The type of transaction for the virtual account.               | ✅           |
-| `expiredDate`             | The expiration date of the virtual account.                    | ❌           |
+<table>
+  <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Length</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>partnerServiceId</code></td>
+      <td colspan="2">The unique identifier for the partner service.</td>
+      <td>1 - 20</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>customerNo</code></td>
+      <td colspan="2">The customer's identification number.</td>
+      <td>1 - 20</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>virtualAccountNo</code></td>
+      <td colspan="2">The virtual account number associated with the customer.</td>
+      <td>1 - 20</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>virtualAccountName</code></td>
+      <td colspan="2">The name of the virtual account associated with the customer.</td>
+      <td>1 - 255</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>virtualAccountEmail</code></td>
+      <td colspan="2">The email address associated with the virtual account.</td>
+      <td>1 - 255</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>virtualAccountPhone</code></td>
+      <td colspan="2">The phone number associated with the virtual account.</td>
+      <td>9 - 30</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>trxId</code></td>
+      <td colspan="2">Invoice number in Partner system.</td>
+      <td>1 - 64</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>totalAmount</code></td>
+      <td colspan="2" ><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td>1 - 16.2</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2" ><code>Currency</code>: Currency <br> <small> Example: "IDR"</small> </td>
+      <td>1 - 3</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="4"><code>additionalInfo</code></td>
+      <td rowspan="4"><code>virtualAccountConfig</code></td>
+      <td><code>reusableStatus</code>: Reusable Status For Virtual Account Transaction
+      <br><small>value TRUE or FALSE</small></td>
+      <td>-</td>
+      <td>Boolean</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>minAmount</code>: Minimum Amount can be use only if virtualAccountTrxType is Open Amount (O). With 2 decimal,format.
+      <br><small>Example: "10000.00"</small></td>
+      <td>1 - 16.2 </td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>maxAmount</code>: Maximum Amount can be use only if virtualAccountTrxType is Open Amount (O). With 2 decimal,format. 
+      <br><small>Example: "5000000.00"</small>
+      </td>
+      <td>1-16.2</td>
+      <td>Decimal</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>channel</code>: Channel that will be applied for this VA <br> <small>VIRTUAL_ACCOUNT_BANK_CIMB</small></td>
+      <td>1 - 20</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td ><code>virtualAccountTrxType</code></td>
+      <td colspan="2">Transaction type for this transaction. C (Closed Amount), O (Open Amount)</td>
+      <td>1</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>expiredDate</code></td>
+      <td colspan="2">Expiration date for Virtual Account. ISO-8601
+        <br><small>Example: "2023-01-01T10:55:00+07:00"</small>
+      </td>
+      <td>-</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+  </tbody>
+</table>
+
 
 
    ```php
@@ -114,6 +223,7 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
       'C',  // virtualAccountTrxType
       "2024-08-31T09:54:04+07:00"  // expiredDate
    );
+
    $result = $snap->createVa($createVaRequestDto);
    echo json_encode($result, JSON_PRETTY_PRINT);
    ```
