@@ -71,13 +71,14 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
 ```
 
 ## a. Virtual Account (DGPC & MGPC)
+#### DGPC
 - **Description:** A pre-generated virtual account provided by DOKU.
 - **Use Case:** Recommended for one-time transactions.
+#### MGPC
+- **Description:** Merchant generated virtual account.
+- **Use Case:** Recommended for top up business model.
 
-1. **Create Virtual Account**
-   - **Function:** `createVa`
-   - **Parameters:** `createVaRequestDto`
-
+Parameters for **createVA** and **updateVA**
 <table>
   <thead>
     <tr>
@@ -133,7 +134,7 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
     </tr>
     <tr>
       <td><code>trxId</code></td>
-      <td colspan="2">Invoice number in Partner system.</td>
+      <td colspan="2">Invoice number in Merchants system.</td>
       <td>1 - 64</td>
       <td>String</td>
       <td>✅</td>
@@ -200,49 +201,95 @@ $snap = new Snap($privateKey, $publicKey, $clientId, $issuer, $isProduction, $se
   </tbody>
 </table>
 
-   ```php
-   use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
-   use Doku\Snap\Models\TotalAmount\TotalAmount;
-   use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
-   use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
+1. **Create Virtual Account**
+    - **Function:** `createVa`
+    - **Parameters:** `createVaRequestDto`
+    ```php
+      use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
+      use Doku\Snap\Models\TotalAmount\TotalAmount;
+      use Doku\Snap\Models\VA\AdditionalInfo\CreateVaRequestAdditionalInfo;
+      use Doku\Snap\Models\VA\VirtualAccountConfig\CreateVaVirtualAccountConfig;
 
-   $createVaRequestDto = new CreateVaRequestDto(
-      "8129014",  // partner
-      "17223992157",  // customerno
-      "812901417223992157",  // customerNo
-      "T_" . time(),  // virtualAccountName
-      "test.example." . time() . "@test.com",  // virtualAccountEmail
-      "621722399214895",  // virtualAccountPhone
-      "INV_CIMB_" . time(),  // trxId
-      new TotalAmount("12500.00", "IDR"),  // totalAmount
-      new CreateVaRequestAdditionalInfo(
-            "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
-            ), // additionalInfo
-      'C',  // virtualAccountTrxType
-      "2024-08-31T09:54:04+07:00"  // expiredDate
-   );
+      $createVaRequestDto = new CreateVaRequestDto(
+        "8129014",  // partner
+        "17223992157",  // customerno
+        "812901417223992157",  // customerNo
+        "T_" . time(),  // virtualAccountName
+        "test.example." . time() . "@test.com",  // virtualAccountEmail
+        "621722399214895",  // virtualAccountPhone
+        "INV_CIMB_" . time(),  // trxId
+        new TotalAmount("12500.00", "IDR"),  // totalAmount
+        new CreateVaRequestAdditionalInfo(
+              "VIRTUAL_ACCOUNT_BANK_CIMB", new CreateVaVirtualAccountConfig(true)
+              ), // additionalInfo
+        'C',  // virtualAccountTrxType
+        "2024-08-31T09:54:04+07:00"  // expiredDate
+      );
 
-   $result = $snap->createVa($createVaRequestDto);
-   echo json_encode($result, JSON_PRETTY_PRINT);
-   ```
+      $result = $snap->createVa($createVaRequestDto);
+      echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
 
 2. **Update Virtual Account**
-   - **Function:** `updateVa`
-   - **Parameters** `updateVaRequestDto`
+    - **Function:** `updateVa`
+    - **Parameters** `updateVaRequestDto`
 
-| **Field**           | **Description**                                                | **Required** |
-|---------------------|----------------------------------------------------------------|--------------|
-| `partnerServiceId`   | The unique identifier for the partner service.                | Yes          |
-| `customerNo`         | The customer's identification number.                         | Yes          |
+    ```php
+      use Doku\Snap\Models\VA\Request\UpdateVaRequestDto;
+      use Doku\Snap\Models\VA\AdditionalInfo\UpdateVaRequestAdditionalInfo;
+      use Doku\Snap\Models\VA\VirtualAccountConfig\UpdateVaVirtualAccountConfig;
 
-```javascript
-const updateVaRequestDto = /* request setup */;
-const response = await snap.updateVa(updateVaRequestDto);
-```
+      $updateVaRequestDto = new UpdateVaRequestDto(
+          "8129014",  // partnerServiceId
+          "17223992155",  // customerNo
+          "812901417223992155",  // virtualAccountNo
+          "T_" . time(),  // virtualAccountName
+          "test.example." . time() . "@test.com",  // virtualAccountEmail
+          "00000062798",  // virtualAccountPhone
+          "INV_CIMB_" . time(),  // trxId
+          new TotalAmount("14000.00", "IDR"),  // totalAmount
+          new UpdateVaRequestAdditionalInfo("VIRTUAL_ACCOUNT_BANK_CIMB", new UpdateVaVirtualAccountConfig("ACTIVE", "10000.00", "15000.00")),  // additionalInfo
+          "O",  // virtualAccountTrxType
+          "2024-08-02T15:54:04+07:00"  // expiredDate
+      );
+
+      $result = $snap->updateVa($updateVaRequestDto);
+      echo json_encode($result, JSON_PRETTY_PRINT);
+    ```
+
+
 
 3. **Delete Virtual Account**
-   - **Function:** `deletePaymentCode`
-   - **Parameters** `deleteVaRequestDto`
+
+    | **Parameter**        | **Description**                                                             | **Length**  | **Data Type**  | **Required** |
+    |-----------------------|----------------------------------------------------------------------------|-------------|----------------|--------------|
+    | `partnerServiceId`    | The unique identifier for the partner service.                             | 1 - 8       | String         | ✅           |
+    | `customerNo`          | The customer's identification number.                                      | 1 - 20      | String         | ✅           |
+    | `virtualAccountNo`    | The virtual account number associated with the customer.                   | 1 - 20      | String         | ✅           |
+    | `trxId`               | Invoice number in Merchant's system.                                       | 1 - 64      | String         | ✅           |
+    | `additionalInfo`      | `channel`: Channel applied for this VA.<br><small>Example: VIRTUAL_ACCOUNT_BANK_CIMB</small> | 1 - 30      | String         | ✅           |
+    
+  - **Function:** `deletePaymentCode`
+  - **Parameters** `deleteVaRequestDto`
+
+  ```php
+  use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
+  use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
+  use Doku\Snap\Models\VA\AdditionalInfo\DeleteVaRequestAdditionalInfo;
+
+  $deleteVaRequestDto = new DeleteVaRequestDto(
+      "8129014",  // partnerServiceId
+      "17223992155",  // customerNo
+      "812901417223992155",  // virtualAccountNo
+      "INV_CIMB_" . time(),  // trxId
+      new DeleteVaRequestAdditionalInfo("VIRTUAL_ACCOUNT_BANK_CIMB")  // additionalInfo
+  );
+
+  $result = $snap->deletePaymentCode($deleteVaRequestDto);
+  echo json_encode($result, JSON_PRETTY_PRINT);
+  ```
+
+
 
 
 ### b. Virtual Account (DIPC)
