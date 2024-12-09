@@ -523,7 +523,7 @@ Each card/account can only registered/bind to one customer on one merchant. Cust
   After customer's account / card is bind merchant can send payment request from customer to DOKU. [How to bind](#b-binding--registration-operations)
 
 ##### Common Parameters
-The following fields are common across Allo Bank and CIMB requests:
+The following fields are common across Allo Bank, BRI and  CIMB requests:
 <table>
   <thead>
     <tr>
@@ -552,14 +552,9 @@ The following fields are common across Allo Bank and CIMB requests:
       <td>✅</td>
     </tr>
     <tr>
-      <td rowspan="4"><code>additionalInfo</code> </td>
+      <td rowspan="3"><code>additionalInfo</code> </td>
       <td colspan = "2" ><code>channel</code>: payment channel</td>
       <td>String</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td colspan="2"><code>remarks</code>: Remarks from Partner</td>
-      <td>String(40)</td>
       <td>✅</td>
     </tr>
     <tr>
@@ -577,12 +572,90 @@ The following fields are common across Allo Bank and CIMB requests:
   </table> 
 
   #####  Allo Bank
+  Allo Bank spesific parameters
+  <table>
+    <thead>
+      <tr>
+        <th><strong>Parameter</strong></th>
+        <th colspan="2"><strong>Description</strong></th>
+        <th><strong>Data Type</strong></th>
+        <th><strong>Required</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan = "4"><code>additionalInfo</code></td>
+        <td colspan = "2" ><code>remarks</code>: Remarks from Partner</td>
+        <td>String(40)</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td rowspan = "3" ><code>lineItems</code></td>
+        <td><code>name</code>: Item Name</td>
+         <td>String(32)</td>
+         <td>✅</td>
+      </tr>
+      <tr>
+        <td><code>price</code>: Amount (ISO 4217) <br> <small>Example: "11500.00"</small> </td>
+        <td>String(16.2)</td>
+        <td>✅</td>
+      </tr>
+       <tr>
+        <td><code>quanity</code></td>
+        <td>Integer</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td rowspan = "3"><code>payOptionDetails</code></td>
+        <td colspan = "2" ><code>payMethod</code>: Balance Type Description <br> <small>option : BALANCE/POINT/PAYLATER</small> </td>
+        <td>string</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td rowspan = "2" ><code>transAmount</code></td>
+        <td><code>value</code>: Transaction Amount</td>
+         <td>String(16.2)</td>
+         <td>✅</td>
+      </tr>
+      <tr>
+        <td><code>currency</code>: <small>example : IDR</small> </td>
+        <td>String</td>
+        <td>✅</td>
+      </tr>
+    </tbody>
+  </table> 
+
+  - **Function:** `Payment Function Name`
+    ```php
+    Code HERE
+    ```
+  ##### BRI
   - **Function:** `Payment Function Name`
     ```php
     Code HERE
     ```
 
   ##### CIMB
+  CIMB spesific parameters
+  <table>
+    <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><code>additionalInfo</code></td>
+      <td colspan = "2" ><code>remarks</code>: Remarks from Partner</td>
+      <td>String(40)</td>
+      <td>✅</td>
+    </tr>
+    </tbody>
+  </table> 
+  
   - **Function:** `Payment Function Name`
     ```php
     Code HERE
