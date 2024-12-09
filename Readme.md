@@ -6,19 +6,32 @@ Welcome to the DOKU PHP SDK! This SDK simplifies access to the DOKU API for your
 If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#), [Java](#)
 
 ## Table of Contents
-1. [Getting Started](#1-getting-started])
-2. [Usage](#2-usage)
-   - [Virtual Account](#virtual-account)
-      - [Virtual Account (DGPC & MGPC)](#a-virtual-account-dgpc)
-      - [Virtual Account  (DIPC)](#dipc)
-      - [Virtual Account Check Status](#c-check-virtual-account-status)
-   - [Binding / Registration Operatios](#b-binding--registration)
-   - [Direct Debit](#)
-   - [E-Wallet](#)
-3. [Handling Notifications and Validations](#handling-notifications-and-validations)
-4. [Error Handling and Troubleshooting](#error-handling-and-troubleshooting)
-5. [Additional Features](#additional-features)
-6. [Appendix](#6-appendix)
+- [DOKU PHP SDK Documentation](#doku-php-sdk-documentation)
+  - [Introduction](#introduction)
+  - [Table of Contents](#table-of-contents)
+  - [1. Getting Started](#1-getting-started)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Configuration](#configuration)
+  - [2. Usage](#2-usage)
+    - [Virtual Account](#virtual-account)
+      - [I. Virtual Account (DGPC \& MGPC)](#i-virtual-account-dgpc--mgpc)
+      - [II. Virtual Account (DIPC)](#ii-virtual-account-dipc)
+      - [III. Check Virtual Account Status](#iii-check-virtual-account-status)
+    - [B. Binding / Registration Operations](#b-binding--registration-operations)
+      - [I. Account Binding](#i-account-binding)
+      - [II. Card Registration](#ii-card-registration)
+    - [C. Direct Debit](#c-direct-debit)
+      - [I. Request Payment](#i-request-payment)
+        - [Allo Bank](#allo-bank)
+        - [CIMB](#cimb)
+    - [D. E-Wallet](#d-e-wallet)
+      - [I. Request Payment](#i-request-payment-1)
+  - [3. Error Handling and Troubleshooting](#3-error-handling-and-troubleshooting)
+  - [4. Appendix](#4-appendix)
+    - [Glossary](#glossary)
+    - [FAQ](#faq)
+
 
 
 ## 1. Getting Started
@@ -185,7 +198,6 @@ Parameters for **createVA** and **updateVA**
 
 1. **Create Virtual Account**
     - **Function:** `createVa`
-    - **Parameters:** `createVaRequestDto`
     ```php
       use Doku\Snap\Models\VA\Request\CreateVaRequestDto;
       use Doku\Snap\Models\TotalAmount\TotalAmount;
@@ -214,7 +226,6 @@ Parameters for **createVA** and **updateVA**
 
 2. **Update Virtual Account**
     - **Function:** `updateVa`
-    - **Parameters:** `updateVaRequestDto`
 
     ```php
       use Doku\Snap\Models\VA\Request\UpdateVaRequestDto;
@@ -251,7 +262,6 @@ Parameters for **createVA** and **updateVA**
 
     
   - **Function:** `deletePaymentCode`
-  - **Parameters** `deleteVaRequestDto`
 
     ```php
     use Doku\Snap\Models\VA\Request\DeleteVaRequestDto;
@@ -286,7 +296,6 @@ Parameters for **createVA** and **updateVA**
 | `additionalInfo`      | The virtual account number associated with the customer.                   | String      | ❌           |
 
   - **Function:** `checkStatusVa`
-  - **Parameters:** `checkStatusVaRequestDto` 
     ```php
     use Doku\Snap\Models\VA\Request\CheckStatusVaRequestDto;
 
@@ -304,11 +313,15 @@ Parameters for **createVA** and **updateVA**
     ```
 
 ### B. Binding / Registration Operations
-| **Services**     | **Binding Type**      | **Details**                        s|
+The card registration/account binding process must be completed before payment can be processed. The merchant will send the card registration request from the customer to DOKU.
+
+Each card/account can only registered/bind to one customer on one merchant. Customer needs to verify OTP and input PIN.
+
+| **Services**     | **Binding Type**      | **Details**                        |
 |-------------------|-----------------------|-----------------------------------|
-| Direct Debit      | Account Binding       | Supports Allo Bank and CIMB       |
-| Direct Debit      | Card Registration     | Supports BRI                      |
-| E-Wallet          | Account Binding       | Supports OVO                      |
+| Direct Debit      | Account Binding       | Supports **Allo Bank** and **CIMB** |
+| Direct Debit      | Card Registration     | Supports **BRI**                    |
+| E-Wallet          | Account Binding       | Supports **OVO**                    |
 
 #### I. Account Binding 
 1. **Binding**
@@ -331,7 +344,7 @@ Parameters for **createVA** and **updateVA**
     </tr>
     <tr>
       <td rowspan="13"><code>additionalInfo</code></td>
-      <td colspan="2"><code>channel</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td colspan="2"><code>channel</code>:  <br> <small>Example: "11500.00"</small></td>
       <td>String(16.2)</td>
       <td>✅</td>
     </tr>
@@ -399,7 +412,6 @@ Parameters for **createVA** and **updateVA**
   </table> 
 
   - **Function:** `doAccountBinding`
-  - **Parameters** `accountBindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
 
     ```php
     use Doku\Snap\Models\AccountBinding\AccountBindingRequestDto;
@@ -430,9 +442,8 @@ Parameters for **createVA** and **updateVA**
     echo json_encode($result, JSON_PRETTY_PRINT);
     ```
 
-2. **Unbinding**
+1. **Unbinding**
     - **Function:** `doAccountUnbinding`
-    - **Parameters:** `accountUnbindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
     ```php
     use Doku\Snap\Models\AccountUnbinding\AccountUnbindingRequestDto;
     use Doku\Snap\Models\AccountUnbinding\AccountUnbindingAdditionalInfoRequestDto;
@@ -451,7 +462,7 @@ Parameters for **createVA** and **updateVA**
 #### II. Card Registration
 1. **Registration**
     - **Function:** `doCardRegistration`
-    - **Parameters** `cardRegistrationRequestDto`,`deviceId`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+
     ```php
     use Doku\Snap\Models\CardRegistration\CardRegistrationRequestDto;
     use Doku\Snap\Models\CardRegistration\CardRegistrationAdditionalInfoRequestDto;
@@ -490,7 +501,7 @@ Parameters for **createVA** and **updateVA**
 
 2. **UnRegistration**
     - **Function:** `doCardUnbinding`
-    - **Parameters** `cardUnbindingRequestDto`,`privateKey`,`clientId`,`secretKey`,`isProduction`
+
     ```php
       use Doku\Snap\Models\AccountUnbinding\AccountUnbindingRequestDto;
       use Doku\Snap\Models\AccountUnbinding\AccountUnbindingAdditionalInfoRequestDto;
@@ -506,29 +517,106 @@ Parameters for **createVA** and **updateVA**
       echo json_encode($result, JSON_PRETTY_PRINT);
     ```
 
-### C.Direct Debit
+### C. Direct Debit
 
-### D.E-Wallet
+#### I. Request Payment
+  After customer's account / card is bind merchant can send payment request from customer to DOKU. [How to bind](#b-binding--registration-operations)
 
-## 3. Handling Notifications and Validations
+##### Common Parameters
+The following fields are common across Allo Bank and CIMB requests:
+<table>
+  <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>partnerReferenceNo</code></td>
+      <td colspan="2"> Reference No From Partner <br> <small>Format: 628238748728423</small> </td>
+      <td>String(9-16)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>amount</code></td>
+      <td colspan="2"><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td>String(16.2)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>Currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String(3)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="4"><code>additionalInfo</code> </td>
+      <td colspan = "2" ><code>channel</code>: payment channel</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>remarks</code>: Remarks from Partner</td>
+      <td>String(40)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>successPaymentUrl</code>: Redirect Url if payment success</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+        <tr>
+      <td colspan="2"><code>failedPaymentUrl</code>: Redirect Url if payment fail
+      </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    </tbody>
+  </table> 
 
-After a customer completes payment, you’ll receive a notification. Here’s how to process notifications and validate them:
+  #####  Allo Bank
+  - **Function:** `Payment Function Name`
+    ```php
+    Code HERE
+    ```
 
-1. **Generate Token for Notification**
-   - **Function:** `validateSignatureAndGenerateToken`
+  ##### CIMB
+  - **Function:** `Payment Function Name`
+    ```php
+    Code HERE
+    ```
 
-```javascript
-const tokenResponse = snap.validateSignatureAndGenerateToken(request, endPointUrl);
-```
 
-2. **Handle Notification Response**
-   - **Function:** `generateNotificationResponse`
+### D. E-Wallet
 
-```javascript
-const notificationResponse = snap.generateNotificationResponse(isTokenValid, requestBody);
-   ```
+#### I. Request Payment
 
-## 4. Error Handling and Troubleshooting
+##### DANA
+ - **Function:** `Payment Function Name`
+    ```php
+    Code HERE
+    ```
+
+##### ShopeePay
+ - **Function:** `Payment Function Name`
+    ```php
+    Code HERE
+    ```
+
+## 3. Error Handling and Troubleshooting
+
+The SDK throws exceptions for various error conditions. Always wrap your API calls in try-catch blocks:
+ ```php
+  try {
+    $result = $snap->createVa($createVaRequestDto);
+    // Process successful result
+  } catch (Exception $e) {
+      echo "Error: " . $e->getMessage() . PHP_EOL;
+      // Handle the error appropriately
+  }
+ ```
 
 This section provides common errors and solutions:
 
@@ -538,22 +626,8 @@ This section provides common errors and solutions:
 | `4012400`  | Virtual Account Not Found             | Verify the virtual account number provided.  |
 | `2002400`  | Successful                            | Transaction completed successfully.          |
 
-## 5. Additional Features
 
-### v1 to SNAP Converter
-For users upgrading from v1 APIs, the SDK provides conversion utilities.
-
-1. **Convert Inquiry from v1 to SNAP**
-   ```javascript
-   const formData = snap.directInquiryRequestMapping(request.headers, request.body);
-   ```
-
-2. **Convert Response from v1 to SNAP**
-   ```javascript
-   const xmlToJson = snap.directInquiryResponseMapping(xmlResponse);
-   ```
-
-## 6. Appendix
+## 4. Appendix
 
 ### Glossary
 - **VA**: Virtual Account, a temporary payment identifier.
