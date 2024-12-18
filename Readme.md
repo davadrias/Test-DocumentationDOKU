@@ -7,12 +7,7 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
 
 ## Table of Contents
 - [DOKU PHP SDK Documentation](#doku-php-sdk-documentation)
-  - [Introduction](#introduction)
-  - [Table of Contents](#table-of-contents)
   - [1. Getting Started](#1-getting-started)
-    - [Requirements](#requirements)
-    - [Installation](#installation)
-    - [Configuration](#configuration)
   - [2. Usage](#2-usage)
     - [Virtual Account](#virtual-account)
       - [I. Virtual Account (DGPC \& MGPC)](#i-virtual-account-dgpc--mgpc)
@@ -23,14 +18,14 @@ If your looking for another language, we got: [Node.js](#), [Go](#), [Python](#)
       - [II. Card Registration](#ii-card-registration)
     - [C. Direct Debit](#c-direct-debit)
       - [I. Request Payment](#i-request-payment)
-        - [Allo Bank](#allo-bank)
-        - [CIMB](#cimb)
     - [D. E-Wallet](#d-e-wallet)
       - [I. Request Payment](#i-request-payment-1)
-  - [3. Error Handling and Troubleshooting](#3-error-handling-and-troubleshooting)
-  - [4. Appendix](#4-appendix)
-    - [Glossary](#glossary)
-    - [FAQ](#faq)
+  - [3. Other Operation](#3-other-operation)
+    - [Check Transaction Status](#a-check-transaction-status)
+    - [Refund](#b-refund)
+    - [Balance Inquiry](#c-balance-inquiry)
+  - [4. Error Handling and Troubleshooting](#4-error-handling-and-troubleshooting)
+  - [5. Appendix](#4-appendix)
 
 
 
@@ -522,8 +517,14 @@ Each card/account can only registered/bind to one customer on one merchant. Cust
 #### I. Request Payment
   After customer's account / card is bind merchant can send payment request from customer to DOKU. [How to bind](#b-binding--registration-operations)
 
+| **Acquirer**       | **Channel Name**         | 
+|-------------------|--------------------------|
+| Allo Bank         | DIRECT_DEBIT_ALLO_SNAP   | 
+| BRI               | DIRECT_DEBIT_BRI_SNAP    | 
+| CIMB              | DIRECT_DEBIT_CIMB_SNAP   |
+
 ##### Common Parameters
-The following fields are common across Allo Bank, BRI and  CIMB requests:
+The following fields are common across **Allo Bank, BRI and CIMB** requests:
 <table>
   <thead>
     <tr>
@@ -665,8 +666,104 @@ The following fields are common across Allo Bank, BRI and  CIMB requests:
 ### D. E-Wallet
 
 #### I. Request Payment
+| **Acquirer**       | **Channel Name**        | 
+|-------------------|--------------------------|
+| DANA              | EMONEY_DANA_SNAP   | 
+| OVO               | EMONEY_OVO_SNAP   | 
+| ShopeePay         | EMONEY_SHOPEE_PAY_SNAP  |
+
+The following fields are common across **DANA and ShopeePay** requests:
+<table>
+  <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>partnerReferenceNo</code></td>
+      <td colspan="2"> Reference No From Partner <br> <small>Examplae : INV-0001</small> </td>
+      <td>String(9-16)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>validUpto</code></td>
+      <td colspan = "2" >Expired time payment url </td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code>pointOfInitiation</code></td>
+      <td colspan = "2" >Point of initiation from partner,<br> value: app/pc/mweb </td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td rowspan = "3" > <code>urlParam</code></td>
+      <td colspan = "2"><code>url</code>: URL after payment sucess </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>type</code>: Pay Return<br> <small>always PAY_RETURN </small></td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>isDeepLink</code>: Is Merchant use deep link or not<br> <small>Example: "Y/N"</small></td>
+      <td>String(1)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>amount</code></td>
+      <td colspan="2"><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td>String(16.2)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>Currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String(3)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>additionalInfo</code> </td>
+      <td colspan = "2" ><code>channel</code>: payment channel</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    </tbody>
+  </table> 
 
 ##### DANA
+
+DANA spesific parameters
+<table>
+    <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td rowspan = "2" ><code>additionalInfo</code></td>
+      <td colspan = "2" ><code>orderTitle</code>: Order title from merchant</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td colspan = "2" ><code>supportDeepLinkCheckoutUrl</code> : Value 'true' for Jumpapp behaviour, 'false' for webview, false by default</td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    </tbody>
+  </table> 
+
  - **Function:** `Payment Function Name`
     ```php
     Code HERE
@@ -678,7 +775,123 @@ The following fields are common across Allo Bank, BRI and  CIMB requests:
     Code HERE
     ```
 
-## 3. Error Handling and Troubleshooting
+##### OVO
+After customer's account is bind merchant can send payment request from customer to DOKU. [How to bind](#b-binding--registration-operations)
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Parameter</strong></th>
+      <th colspan="2"><strong>Description</strong></th>
+      <th><strong>Data Type</strong></th>
+      <th><strong>Required</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>partnerReferenceNo</code></td>
+      <td colspan="2"> Reference No From Partner <br> <small>Examplae : INV-0001</small> </td>
+      <td>String(9-16)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>feeType</code></td>
+      <td colspan = "2" >Fee type from partner | value should be: OUR/BEN/SHA </td>
+      <td>String</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>amount</code></td>
+      <td colspan="2"><code>value</code>: Transaction Amount (ISO 4217) <br> <small>Example: "11500.00"</small></td>
+      <td>String(16.2)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>Currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String(3)</td>
+      <td>✅</td>
+    </tr>
+     <tr>
+      <td rowspan = "5" > <code>payOptionDetails</code></td>
+      <td colspan = "2"><code>payMethod</code>: Pay method format: CASH / POINTS </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>transAmount</code></td>
+      <td><code>value</code>Transaction Amount. Total Amount with 2 decimal</td>
+      <td>String(16.2)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td ><code>currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String(3)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>feeAmount</code></td>
+      <td><code>value</code>: Fee Amount</td>
+      <td>String(16.2)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td ><code>currency</code>: Currency <br> <small>Example: "IDR"</small></td>
+      <td>String(3)</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td rowspan = "4" ><code>additionalInfo</code> </td>
+      <td colspan = "2" ><code>channel</code>: payment channel</td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>successPaymentUrl</code>: Redirect Url if payment success
+      </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td colspan="2"><code>failedPaymentUrl</code>: Redirect Url if payment fail
+      </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+        <tr>
+      <td colspan="2"><code>paymentType</code>: Transaction Type 
+      <br> <small>value should be SALE/RECURRING </small>
+      </td>
+      <td>String</td>
+      <td>✅</td>
+    </tr>
+    </tbody>
+  </table> 
+
+- **Function:** `Payment Function Name`
+  ````php
+  Code HERE
+  ````
+## 3. Other Operation
+
+### A. Check Transaction Status
+
+  ```php
+  Code HERE
+  ```
+
+### B. Refund
+
+  ```php
+  Code HERE
+  ```
+
+### C. Balance Inquiry
+
+  ```php
+  Code HERE
+  ```
+
+## 4. Error Handling and Troubleshooting
 
 The SDK throws exceptions for various error conditions. Always wrap your API calls in try-catch blocks:
  ```php
@@ -700,7 +913,7 @@ This section provides common errors and solutions:
 | `2002400`  | Successful                            | Transaction completed successfully.          |
 
 
-## 4. Appendix
+## 5. Appendix
 
 ### Glossary
 - **VA**: Virtual Account, a temporary payment identifier.
